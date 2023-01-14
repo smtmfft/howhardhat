@@ -5,7 +5,7 @@ import { ethers } from "hardhat";
 import * as fs from "fs";
 import { BigNumber } from "ethers";
 
-describe.only("Verifier", function () {
+describe("Verifier", function () {
     // We define a fixture to reuse the same setup in every test.
     // We use loadFixture to run this setup once, snapshot that state,
     // and reset Hardhat Network to that snapshot in every test.
@@ -51,8 +51,8 @@ describe.only("Verifier", function () {
         });
     });
 
-    describe.only("Simple point verify test", function () {
-        it.only("Point verify success", async function () {
+    describe("Simple point verify test", function () {
+        it("Point verify success", async function () {
             const { verifier } = await loadFixture(deployVerificationFixture);
             // const abi_offset = 68; // selector(4) + address(32) + length(32)
             const calldata_size = 0x20 * 2; // 0x20 * 2 for 1 points
@@ -67,7 +67,7 @@ describe.only("Verifier", function () {
             expect(await verifier.verifyPoint(data)).to.be.ok;
         });
 
-        it.only("Point verify failed", async function () {
+        it("Point verify failed", async function () {
             const { verifier } = await loadFixture(deployVerificationFixture);
             var data = Buffer.alloc(0x40);
             for (let i = 0; i < 0x40; i++) {
@@ -81,7 +81,7 @@ describe.only("Verifier", function () {
         before("loading", function () {
             var Buffer = require('buffer').Buffer;
 
-            const calldata_file = "/home/ubuntu/works/hardhats/vtest/calldata.bin";
+            const calldata_file = "./data/calldata.bin";
             fs.open(calldata_file, 'r', function (status, fd) {
                 if (status) {
                     console.log(status.message);
@@ -94,7 +94,7 @@ describe.only("Verifier", function () {
                 var buffer = Buffer.alloc(fileSizeInBytes);
                 var i = 0;
                 fs.read(fd, buffer, 0, fileSizeInBytes, 0, function (err, num) {
-                    console.log(buffer.toString("hex"));
+                    // console.log(buffer.toString("hex"));
                 });
 
                 global.buffer = buffer;
@@ -105,13 +105,13 @@ describe.only("Verifier", function () {
             const { verifier } = await loadFixture(deployVerificationFixture);
             var buffer = global.buffer;
 
-            console.log("test 1, buffer", buffer.toString("hex"));
+            console.log("test calldata:", buffer.toString("hex"));
             expect(await verifier.verify(buffer)).to.be.ok;
         });
 
         it("Should verify revert ", async function () {
             const { verifier } = await loadFixture(deployVerificationFixture);
-            var buffer = global.buffer.copy();
+            var buffer = global.buffer;
 
             buffer[0] = 1
             await expect(verifier.verify(buffer)).to.be.reverted;

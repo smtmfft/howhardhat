@@ -23,6 +23,7 @@ contract Verifier {
         owner = payable(msg.sender);
     }
 
+    // point verifier for test purpose
     function verifyPoint(bytes calldata proof) public returns (uint) {
         // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
         assembly {
@@ -62,14 +63,16 @@ contract Verifier {
             let y := calldataload_with_offset(0x20)
             let s := validate_ec_point(x, y)
             if eq(s, false) {revert(0, 0)}
-            return(0, 0)
+            mstore(0x00, s)
+            return(0, 32)
         }
-        return 0;
     }
 
+    // verify proof.
+    // code comes from data/PlonkVerifierEvm.yul, 
     function verify(bytes calldata proof) public view returns (uint) {
         // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
-        console.log("verify the proof ", proof.length);
+        // console.log("verify the proof ", proof.length);
         assembly {
             let success := true
             let f_p := 0x30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47
@@ -96,115 +99,120 @@ contract Verifier {
                     valid := and(y_square_eq_x_cube_plus_3, valid)
                 }
 
-                if not(eq(valid, true)) {revert(0, 0)}
+                if eq(valid, false) {revert(0, 0)}
             }
-            mstore(0x20, mod(calldataload(0x00), f_q))
-            mstore(0x40, mod(calldataload(0x20), f_q))
-            mstore(0x60, mod(calldataload(0x40), f_q))
-            mstore(0x80, mod(calldataload(0x60), f_q))
-            mstore(0xa0, mod(calldataload(0x80), f_q))
+
+            function calldataload_with_offset(ptr) -> data {
+                data := calldataload(add(ptr, 0x44))
+            }
+
+            mstore(0x20, mod(calldataload_with_offset(0x00), f_q))
+            mstore(0x40, mod(calldataload_with_offset(0x20), f_q))
+            mstore(0x60, mod(calldataload_with_offset(0x40), f_q))
+            mstore(0x80, mod(calldataload_with_offset(0x60), f_q))
+            mstore(0xa0, mod(calldataload_with_offset(0x80), f_q))
             mstore(0x0, 16452513676869568616115473020641242130117142260757420799578184339005088601661)
 
             {
-                let x := calldataload(0xa0)
+                let x := calldataload_with_offset(0xa0)
                 mstore(0xc0, x)
-                let y := calldataload(0xc0)
+                let y := calldataload_with_offset(0xc0)
                 mstore(0xe0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0xe0)
+                let x := calldataload_with_offset(0xe0)
                 mstore(0x100, x)
-                let y := calldataload(0x100)
+                let y := calldataload_with_offset(0x100)
                 mstore(0x120, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x120)
+                let x := calldataload_with_offset(0x120)
                 mstore(0x140, x)
-                let y := calldataload(0x140)
+                let y := calldataload_with_offset(0x140)
                 mstore(0x160, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x160)
+                let x := calldataload_with_offset(0x160)
                 mstore(0x180, x)
-                let y := calldataload(0x180)
+                let y := calldataload_with_offset(0x180)
                 mstore(0x1a0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x1a0)
+                let x := calldataload_with_offset(0x1a0)
                 mstore(0x1c0, x)
-                let y := calldataload(0x1c0)
+                let y := calldataload_with_offset(0x1c0)
                 mstore(0x1e0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x1e0)
+                let x := calldataload_with_offset(0x1e0)
                 mstore(0x200, x)
-                let y := calldataload(0x200)
+                let y := calldataload_with_offset(0x200)
                 mstore(0x220, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x220)
+                let x := calldataload_with_offset(0x220)
                 mstore(0x240, x)
-                let y := calldataload(0x240)
+                let y := calldataload_with_offset(0x240)
                 mstore(0x260, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x260)
+                let x := calldataload_with_offset(0x260)
                 mstore(0x280, x)
-                let y := calldataload(0x280)
+                let y := calldataload_with_offset(0x280)
                 mstore(0x2a0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x2a0)
+                let x := calldataload_with_offset(0x2a0)
                 mstore(0x2c0, x)
-                let y := calldataload(0x2c0)
+                let y := calldataload_with_offset(0x2c0)
                 mstore(0x2e0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x2e0)
+                let x := calldataload_with_offset(0x2e0)
                 mstore(0x300, x)
-                let y := calldataload(0x300)
+                let y := calldataload_with_offset(0x300)
                 mstore(0x320, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x320)
+                let x := calldataload_with_offset(0x320)
                 mstore(0x340, x)
-                let y := calldataload(0x340)
+                let y := calldataload_with_offset(0x340)
                 mstore(0x360, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x360)
+                let x := calldataload_with_offset(0x360)
                 mstore(0x380, x)
-                let y := calldataload(0x380)
+                let y := calldataload_with_offset(0x380)
                 mstore(0x3a0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x3a0)
+                let x := calldataload_with_offset(0x3a0)
                 mstore(0x3c0, x)
-                let y := calldataload(0x3c0)
+                let y := calldataload_with_offset(0x3c0)
                 mstore(0x3e0, y)
                 success := and(validate_ec_point(x, y), success)
             }
@@ -223,9 +231,9 @@ contract Verifier {
             }
 
             {
-                let x := calldataload(0x3e0)
+                let x := calldataload_with_offset(0x3e0)
                 mstore(0x4c0, x)
-                let y := calldataload(0x400)
+                let y := calldataload_with_offset(0x400)
                 mstore(0x4e0, y)
                 success := and(validate_ec_point(x, y), success)
             }
@@ -237,33 +245,33 @@ contract Verifier {
             }
 
             {
-                let x := calldataload(0x420)
+                let x := calldataload_with_offset(0x420)
                 mstore(0x560, x)
-                let y := calldataload(0x440)
+                let y := calldataload_with_offset(0x440)
                 mstore(0x580, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x460)
+                let x := calldataload_with_offset(0x460)
                 mstore(0x5a0, x)
-                let y := calldataload(0x480)
+                let y := calldataload_with_offset(0x480)
                 mstore(0x5c0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x4a0)
+                let x := calldataload_with_offset(0x4a0)
                 mstore(0x5e0, x)
-                let y := calldataload(0x4c0)
+                let y := calldataload_with_offset(0x4c0)
                 mstore(0x600, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x4e0)
+                let x := calldataload_with_offset(0x4e0)
                 mstore(0x620, x)
-                let y := calldataload(0x500)
+                let y := calldataload_with_offset(0x500)
                 mstore(0x640, y)
                 success := and(validate_ec_point(x, y), success)
             }
@@ -282,33 +290,33 @@ contract Verifier {
             }
 
             {
-                let x := calldataload(0x520)
+                let x := calldataload_with_offset(0x520)
                 mstore(0x720, x)
-                let y := calldataload(0x540)
+                let y := calldataload_with_offset(0x540)
                 mstore(0x740, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x560)
+                let x := calldataload_with_offset(0x560)
                 mstore(0x760, x)
-                let y := calldataload(0x580)
+                let y := calldataload_with_offset(0x580)
                 mstore(0x780, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x5a0)
+                let x := calldataload_with_offset(0x5a0)
                 mstore(0x7a0, x)
-                let y := calldataload(0x5c0)
+                let y := calldataload_with_offset(0x5c0)
                 mstore(0x7c0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x5e0)
+                let x := calldataload_with_offset(0x5e0)
                 mstore(0x7e0, x)
-                let y := calldataload(0x600)
+                let y := calldataload_with_offset(0x600)
                 mstore(0x800, y)
                 success := and(validate_ec_point(x, y), success)
             }
@@ -320,65 +328,65 @@ contract Verifier {
             }
 
             {
-                let x := calldataload(0x620)
+                let x := calldataload_with_offset(0x620)
                 mstore(0x880, x)
-                let y := calldataload(0x640)
+                let y := calldataload_with_offset(0x640)
                 mstore(0x8a0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x660)
+                let x := calldataload_with_offset(0x660)
                 mstore(0x8c0, x)
-                let y := calldataload(0x680)
+                let y := calldataload_with_offset(0x680)
                 mstore(0x8e0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x6a0)
+                let x := calldataload_with_offset(0x6a0)
                 mstore(0x900, x)
-                let y := calldataload(0x6c0)
+                let y := calldataload_with_offset(0x6c0)
                 mstore(0x920, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x6e0)
+                let x := calldataload_with_offset(0x6e0)
                 mstore(0x940, x)
-                let y := calldataload(0x700)
+                let y := calldataload_with_offset(0x700)
                 mstore(0x960, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x720)
+                let x := calldataload_with_offset(0x720)
                 mstore(0x980, x)
-                let y := calldataload(0x740)
+                let y := calldataload_with_offset(0x740)
                 mstore(0x9a0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x760)
+                let x := calldataload_with_offset(0x760)
                 mstore(0x9c0, x)
-                let y := calldataload(0x780)
+                let y := calldataload_with_offset(0x780)
                 mstore(0x9e0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x7a0)
+                let x := calldataload_with_offset(0x7a0)
                 mstore(0xa00, x)
-                let y := calldataload(0x7c0)
+                let y := calldataload_with_offset(0x7c0)
                 mstore(0xa20, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0x7e0)
+                let x := calldataload_with_offset(0x7e0)
                 mstore(0xa40, x)
-                let y := calldataload(0x800)
+                let y := calldataload_with_offset(0x800)
                 mstore(0xa60, y)
                 success := and(validate_ec_point(x, y), success)
             }
@@ -388,53 +396,53 @@ contract Verifier {
                 mstore(0xaa0, mod(hash, f_q))
                 mstore(0xac0, hash)
             }
-            mstore(0xae0, mod(calldataload(0x820), f_q))
-            mstore(0xb00, mod(calldataload(0x840), f_q))
-            mstore(0xb20, mod(calldataload(0x860), f_q))
-            mstore(0xb40, mod(calldataload(0x880), f_q))
-            mstore(0xb60, mod(calldataload(0x8a0), f_q))
-            mstore(0xb80, mod(calldataload(0x8c0), f_q))
-            mstore(0xba0, mod(calldataload(0x8e0), f_q))
-            mstore(0xbc0, mod(calldataload(0x900), f_q))
-            mstore(0xbe0, mod(calldataload(0x920), f_q))
-            mstore(0xc00, mod(calldataload(0x940), f_q))
-            mstore(0xc20, mod(calldataload(0x960), f_q))
-            mstore(0xc40, mod(calldataload(0x980), f_q))
-            mstore(0xc60, mod(calldataload(0x9a0), f_q))
-            mstore(0xc80, mod(calldataload(0x9c0), f_q))
-            mstore(0xca0, mod(calldataload(0x9e0), f_q))
-            mstore(0xcc0, mod(calldataload(0xa00), f_q))
-            mstore(0xce0, mod(calldataload(0xa20), f_q))
-            mstore(0xd00, mod(calldataload(0xa40), f_q))
-            mstore(0xd20, mod(calldataload(0xa60), f_q))
-            mstore(0xd40, mod(calldataload(0xa80), f_q))
-            mstore(0xd60, mod(calldataload(0xaa0), f_q))
-            mstore(0xd80, mod(calldataload(0xac0), f_q))
-            mstore(0xda0, mod(calldataload(0xae0), f_q))
-            mstore(0xdc0, mod(calldataload(0xb00), f_q))
-            mstore(0xde0, mod(calldataload(0xb20), f_q))
-            mstore(0xe00, mod(calldataload(0xb40), f_q))
-            mstore(0xe20, mod(calldataload(0xb60), f_q))
-            mstore(0xe40, mod(calldataload(0xb80), f_q))
-            mstore(0xe60, mod(calldataload(0xba0), f_q))
-            mstore(0xe80, mod(calldataload(0xbc0), f_q))
-            mstore(0xea0, mod(calldataload(0xbe0), f_q))
-            mstore(0xec0, mod(calldataload(0xc00), f_q))
-            mstore(0xee0, mod(calldataload(0xc20), f_q))
-            mstore(0xf00, mod(calldataload(0xc40), f_q))
-            mstore(0xf20, mod(calldataload(0xc60), f_q))
-            mstore(0xf40, mod(calldataload(0xc80), f_q))
-            mstore(0xf60, mod(calldataload(0xca0), f_q))
-            mstore(0xf80, mod(calldataload(0xcc0), f_q))
-            mstore(0xfa0, mod(calldataload(0xce0), f_q))
-            mstore(0xfc0, mod(calldataload(0xd00), f_q))
-            mstore(0xfe0, mod(calldataload(0xd20), f_q))
-            mstore(0x1000, mod(calldataload(0xd40), f_q))
-            mstore(0x1020, mod(calldataload(0xd60), f_q))
-            mstore(0x1040, mod(calldataload(0xd80), f_q))
-            mstore(0x1060, mod(calldataload(0xda0), f_q))
-            mstore(0x1080, mod(calldataload(0xdc0), f_q))
-            mstore(0x10a0, mod(calldataload(0xde0), f_q))
+            mstore(0xae0, mod(calldataload_with_offset(0x820), f_q))
+            mstore(0xb00, mod(calldataload_with_offset(0x840), f_q))
+            mstore(0xb20, mod(calldataload_with_offset(0x860), f_q))
+            mstore(0xb40, mod(calldataload_with_offset(0x880), f_q))
+            mstore(0xb60, mod(calldataload_with_offset(0x8a0), f_q))
+            mstore(0xb80, mod(calldataload_with_offset(0x8c0), f_q))
+            mstore(0xba0, mod(calldataload_with_offset(0x8e0), f_q))
+            mstore(0xbc0, mod(calldataload_with_offset(0x900), f_q))
+            mstore(0xbe0, mod(calldataload_with_offset(0x920), f_q))
+            mstore(0xc00, mod(calldataload_with_offset(0x940), f_q))
+            mstore(0xc20, mod(calldataload_with_offset(0x960), f_q))
+            mstore(0xc40, mod(calldataload_with_offset(0x980), f_q))
+            mstore(0xc60, mod(calldataload_with_offset(0x9a0), f_q))
+            mstore(0xc80, mod(calldataload_with_offset(0x9c0), f_q))
+            mstore(0xca0, mod(calldataload_with_offset(0x9e0), f_q))
+            mstore(0xcc0, mod(calldataload_with_offset(0xa00), f_q))
+            mstore(0xce0, mod(calldataload_with_offset(0xa20), f_q))
+            mstore(0xd00, mod(calldataload_with_offset(0xa40), f_q))
+            mstore(0xd20, mod(calldataload_with_offset(0xa60), f_q))
+            mstore(0xd40, mod(calldataload_with_offset(0xa80), f_q))
+            mstore(0xd60, mod(calldataload_with_offset(0xaa0), f_q))
+            mstore(0xd80, mod(calldataload_with_offset(0xac0), f_q))
+            mstore(0xda0, mod(calldataload_with_offset(0xae0), f_q))
+            mstore(0xdc0, mod(calldataload_with_offset(0xb00), f_q))
+            mstore(0xde0, mod(calldataload_with_offset(0xb20), f_q))
+            mstore(0xe00, mod(calldataload_with_offset(0xb40), f_q))
+            mstore(0xe20, mod(calldataload_with_offset(0xb60), f_q))
+            mstore(0xe40, mod(calldataload_with_offset(0xb80), f_q))
+            mstore(0xe60, mod(calldataload_with_offset(0xba0), f_q))
+            mstore(0xe80, mod(calldataload_with_offset(0xbc0), f_q))
+            mstore(0xea0, mod(calldataload_with_offset(0xbe0), f_q))
+            mstore(0xec0, mod(calldataload_with_offset(0xc00), f_q))
+            mstore(0xee0, mod(calldataload_with_offset(0xc20), f_q))
+            mstore(0xf00, mod(calldataload_with_offset(0xc40), f_q))
+            mstore(0xf20, mod(calldataload_with_offset(0xc60), f_q))
+            mstore(0xf40, mod(calldataload_with_offset(0xc80), f_q))
+            mstore(0xf60, mod(calldataload_with_offset(0xca0), f_q))
+            mstore(0xf80, mod(calldataload_with_offset(0xcc0), f_q))
+            mstore(0xfa0, mod(calldataload_with_offset(0xce0), f_q))
+            mstore(0xfc0, mod(calldataload_with_offset(0xd00), f_q))
+            mstore(0xfe0, mod(calldataload_with_offset(0xd20), f_q))
+            mstore(0x1000, mod(calldataload_with_offset(0xd40), f_q))
+            mstore(0x1020, mod(calldataload_with_offset(0xd60), f_q))
+            mstore(0x1040, mod(calldataload_with_offset(0xd80), f_q))
+            mstore(0x1060, mod(calldataload_with_offset(0xda0), f_q))
+            mstore(0x1080, mod(calldataload_with_offset(0xdc0), f_q))
+            mstore(0x10a0, mod(calldataload_with_offset(0xde0), f_q))
             mstore(0x10c0, keccak256(0xac0, 1536))
             {
                 let hash := mload(0x10c0)
@@ -443,49 +451,49 @@ contract Verifier {
             }
 
             {
-                let x := calldataload(0xe00)
+                let x := calldataload_with_offset(0xe00)
                 mstore(0x1120, x)
-                let y := calldataload(0xe20)
+                let y := calldataload_with_offset(0xe20)
                 mstore(0x1140, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0xe40)
+                let x := calldataload_with_offset(0xe40)
                 mstore(0x1160, x)
-                let y := calldataload(0xe60)
+                let y := calldataload_with_offset(0xe60)
                 mstore(0x1180, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0xe80)
+                let x := calldataload_with_offset(0xe80)
                 mstore(0x11a0, x)
-                let y := calldataload(0xea0)
+                let y := calldataload_with_offset(0xea0)
                 mstore(0x11c0, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0xec0)
+                let x := calldataload_with_offset(0xec0)
                 mstore(0x11e0, x)
-                let y := calldataload(0xee0)
+                let y := calldataload_with_offset(0xee0)
                 mstore(0x1200, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0xf00)
+                let x := calldataload_with_offset(0xf00)
                 mstore(0x1220, x)
-                let y := calldataload(0xf20)
+                let y := calldataload_with_offset(0xf20)
                 mstore(0x1240, y)
                 success := and(validate_ec_point(x, y), success)
             }
 
             {
-                let x := calldataload(0xf40)
+                let x := calldataload_with_offset(0xf40)
                 mstore(0x1260, x)
-                let y := calldataload(0xf60)
+                let y := calldataload_with_offset(0xf60)
                 mstore(0x1280, y)
                 success := and(validate_ec_point(x, y), success)
             }
@@ -1670,8 +1678,9 @@ contract Verifier {
             success := and(eq(staticcall(gas(), 0x8, 0x8c20, 0x180, 0x8c20, 0x20), 1), success)
             success := and(eq(mload(0x8c20), 1), success)
 
-            if not(success) { revert(0, 0) }
-            return(0, 0)
+            if eq(success, false) { revert(0, 0) }
+            mstore(0x00, success)
+            return(0, 32)
         }
     }
 }

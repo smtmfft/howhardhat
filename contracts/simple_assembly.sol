@@ -2,7 +2,7 @@
 pragma solidity ^0.8.7;
 
 // Uncomment this line to use console.log
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract SimpleAssembly {
     address payable public owner;
@@ -17,7 +17,7 @@ contract SimpleAssembly {
         }
     }
 
-    function simpleAssemblyRevert() public view {
+    function simpleAssemblyRevert() public pure {
         assembly {
             revert(0, 0)
         }
