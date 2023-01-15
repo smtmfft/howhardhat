@@ -39,9 +39,6 @@ describe("SimpleAssembly", function () {
         it("load calldata with offset", async function() {
             const { simpleAssembly } = await loadFixture(deploySimpleAssemblyFixture);
             var buffer = Buffer.alloc(32);
-            for (let i = 0; i < 32; i++) {
-                buffer[i] = 0;
-            }
             buffer[31] = 1
             expect(await simpleAssembly.simpleAssemblyCalldataLoad(buffer)).to.be.equal(1);
         });
@@ -49,9 +46,6 @@ describe("SimpleAssembly", function () {
         it("load calldata with offset revert if buffer is 0", async function() {
             const { simpleAssembly } = await loadFixture(deploySimpleAssemblyFixture);
             var buffer = Buffer.alloc(32);
-            for (let i = 0; i < 32; i++) {
-                buffer[i] = 0;
-            }
             await expect(simpleAssembly.simpleAssemblyCalldataLoad(buffer)).to.be.reverted;
         });
     });
