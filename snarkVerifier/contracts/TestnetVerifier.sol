@@ -4,7 +4,7 @@ pragma solidity ^0.8.7;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
-contract TestNetVerifier {
+contract TestnetVerifier {
     uint public max_txs;
     uint public max_calldata;
     address payable public owner;
@@ -16,7 +16,7 @@ contract TestNetVerifier {
             _max_txs == 14 && _max_calldata == 10500,
             "_max_txs == 14 and _max_calldata == 10500"
         );
-        console.log("constructing the verifier");
+        // console.log("constructing the verifier");
 
         max_txs = _max_txs;
         max_calldata = _max_calldata;

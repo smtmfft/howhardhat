@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import * as fs from "fs";
 
-describe("Verifier", function () {
+describe("TestnetVerifier", function () {
     // We define a fixture to reuse the same setup in every test.
     // We use loadFixture to run this setup once, snapshot that state,
     // and reset Hardhat Network to that snapshot in every test.
@@ -17,7 +17,7 @@ describe("Verifier", function () {
 
         // Contracts are deployed using the first signer/account by default
         const [owner, otherAccount] = await ethers.getSigners();
-        const TestnetVerifier = await ethers.getContractFactory("TestNetVerifier");
+        const TestnetVerifier = await ethers.getContractFactory("TestnetVerifier");
         const testnetVerifier = await TestnetVerifier.deploy(max_txs, max_calldata, { value: lockedAmount, gasLimit: GAS_LIMIT });
 
         return { verifier: testnetVerifier, max_txs: max_txs, max_calldata: max_calldata, lockedAmount, owner, otherAccount };

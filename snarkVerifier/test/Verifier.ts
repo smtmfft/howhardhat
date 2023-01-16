@@ -5,7 +5,7 @@ import { ethers } from "hardhat";
 import * as fs from "fs";
 import { BigNumber } from "ethers";
 
-describe("Verifier", function () {
+describe("MockDataVerifier", function () {
     // We define a fixture to reuse the same setup in every test.
     // We use loadFixture to run this setup once, snapshot that state,
     // and reset Hardhat Network to that snapshot in every test.
