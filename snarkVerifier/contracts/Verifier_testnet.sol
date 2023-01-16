@@ -2,9 +2,9 @@
 pragma solidity ^0.8.7;
 
 // Uncomment this line to use console.log
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
-contract Verifier {
+contract TestNetVerifier {
     uint public max_txs;
     uint public max_calldata;
     address payable public owner;
@@ -13,8 +13,8 @@ contract Verifier {
 
     constructor(uint _max_txs, uint _max_calldata) payable {
         require(
-            _max_txs > 0,
-            "max_txs > 0"
+            _max_txs == 14 && _max_calldata == 10500,
+            "_max_txs == 14 and _max_calldata == 10500"
         );
         console.log("constructing the verifier");
 
@@ -23,54 +23,10 @@ contract Verifier {
         owner = payable(msg.sender);
     }
 
-    // point verifier for test purpose
-    function verifyPoint(bytes calldata proof) public returns (uint) {
-        // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
-        assembly {
-            let success := true
-            let f_p := 0x30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47
-            let f_q := 0x30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001
-            function validate_ec_point(x, y) -> valid {
-                {
-                    let x_lt_p := lt(x, 0x30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47)
-                    let y_lt_p := lt(y, 0x30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47)
-                    valid := and(x_lt_p, y_lt_p)
-                }
-                {
-                    let x_is_zero := eq(x, 0)
-                    let y_is_zero := eq(y, 0)
-                    let x_or_y_is_zero := or(x_is_zero, y_is_zero)
-                    let x_and_y_is_not_zero := not(x_or_y_is_zero)
-                    valid := and(x_and_y_is_not_zero, valid)
-                }
-                {
-                    let y_square := mulmod(y, y, 0x30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47)
-                    let x_square := mulmod(x, x, 0x30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47)
-                    let x_cube := mulmod(x_square, x, 0x30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47)
-                    let x_cube_plus_3 := addmod(x_cube, 3, 0x30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47)
-                    let y_square_eq_x_cube_plus_3 := eq(x_cube_plus_3, y_square)
-                    valid := and(y_square_eq_x_cube_plus_3, valid)
-                }
-
-                if eq(valid, false) {revert(0, 0)}
-            }
-
-            function calldataload_with_offset(ptr) -> data {
-                data := calldataload(add(ptr, 0x44))
-            }
-            
-            let x := calldataload_with_offset(0x00)
-            let y := calldataload_with_offset(0x20)
-            let s := validate_ec_point(x, y)
-            if eq(s, false) {revert(0, 0)}
-            mstore(0x00, s)
-            return(0, 32)
-        }
-    }
-
-    // verify mock proof.
+    // verify real test proof.
+    // PI<MAX_TXS=14, MAX_CALLDATA=10500>
     // code comes from data/PlonkVerifierEvm.yul, 
-    function verifyMockData(bytes calldata proof) public view returns (uint) {
+    function verifyTestNetData(bytes calldata proof) public view returns (uint) {
         // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
         // console.log("verify the proof ", proof.length);
         assembly {
@@ -106,12 +62,12 @@ contract Verifier {
                 data := calldataload(add(ptr, 0x44))
             }
 
-            mstore(0x20, mod(calldataload_with_offset(0x00), f_q))
+            mstore(0x20, mod(calldataload_with_offset(0x0), f_q))
             mstore(0x40, mod(calldataload_with_offset(0x20), f_q))
             mstore(0x60, mod(calldataload_with_offset(0x40), f_q))
             mstore(0x80, mod(calldataload_with_offset(0x60), f_q))
             mstore(0xa0, mod(calldataload_with_offset(0x80), f_q))
-            mstore(0x0, 16452513676869568616115473020641242130117142260757420799578184339005088601661)
+            mstore(0x0, 369163852620380522906262468383236902308789403158227178956434169856876255098)
 
             {
                 let x := calldataload_with_offset(0xa0)
@@ -1203,9 +1159,9 @@ contract Verifier {
             mstore(0x5ee0, mulmod(mload(0x58a0), mload(0x5ec0), f_q))
             mstore(0x5f00, mulmod(14301109305233875879800880185425345339138649975525900728211315483473936015336, mload(0xaa0), f_q))
             mstore(0x5f20, mulmod(mload(0x5bc0), mload(0x5f00), f_q))
-            mstore(0x5f40, mulmod(14523845938020229192372327260561040434768706408908894435276438994232817716547, mload(0xaa0), f_q))
+            mstore(0x5f40, mulmod(18692705892880282321496735629591795720478967493699042848104039933759957773311, mload(0xaa0), f_q))
             mstore(0x5f60, mulmod(mload(0x5c60), mload(0x5f40), f_q))
-            mstore(0x5f80, mulmod(8665428958068183356210198576352489417632406499768138345630510151102471819292, mload(0xaa0), f_q))
+            mstore(0x5f80, mulmod(21870189975119436114252110485335790532642623321946906002882013852447303224967, mload(0xaa0), f_q))
             mstore(0x5fa0, mulmod(mload(0x5d00), mload(0x5f80), f_q))
             mstore(0x5fc0, mulmod(6363119021782681274480715230122258277189830284152385293217720612674619714422, mload(0xaa0), f_q))
             mstore(0x5fe0, mulmod(mload(0x5de0), mload(0x5fc0), f_q))
@@ -1384,8 +1340,8 @@ contract Verifier {
             mstore(0x70c0, mload(0x7020))
             mstore(0x70e0, mload(0x7040))
             success := and(eq(staticcall(gas(), 0x6, 0x7080, 0x80, 0x7080, 0x40), 1), success)
-            mstore(0x7100, 0x0f08abb37fadceedc66eca7f232928cc6ac845e1dfe5e511f5c0dc88a291c0b4)
-            mstore(0x7120, 0x06b4b9cb8270c6f43c2a11f8c22377354251334db7e64faca05f0ca31d4ac0ac)
+            mstore(0x7100, 0x0c74c709cb96986f1d0cfbf8158c49d6527be29297e2a34160758d1eafd9998d)
+            mstore(0x7120, 0x0d046fcbebf5d9f93201454ce9080ab1e72e54a720571d790497c0938ec8deb4)
             mstore(0x7140, mload(0x5360))
             success := and(eq(staticcall(gas(), 0x7, 0x7100, 0x60, 0x7100, 0x40), 1), success)
             mstore(0x7160, mload(0x7080))
@@ -1393,8 +1349,8 @@ contract Verifier {
             mstore(0x71a0, mload(0x7100))
             mstore(0x71c0, mload(0x7120))
             success := and(eq(staticcall(gas(), 0x6, 0x7160, 0x80, 0x7160, 0x40), 1), success)
-            mstore(0x71e0, 0x1b1936f510bcd4c8b8e325c652b318025f4858b6d53877440575a81e78247629)
-            mstore(0x7200, 0x288276003514f16b91e3d7c8931f86e1289386c426eff6293bee9499e21f830c)
+            mstore(0x71e0, 0x0798039723cfac91efb75ead960552b9a82e84be97ba9417f9a9de7d724ea345)
+            mstore(0x7200, 0x008dc098cedc0978ec271ba6809b71116220fa707c32e9765f192c6f8066be46)
             mstore(0x7220, mload(0x5380))
             success := and(eq(staticcall(gas(), 0x7, 0x71e0, 0x60, 0x71e0, 0x40), 1), success)
             mstore(0x7240, mload(0x7160))
@@ -1402,8 +1358,8 @@ contract Verifier {
             mstore(0x7280, mload(0x71e0))
             mstore(0x72a0, mload(0x7200))
             success := and(eq(staticcall(gas(), 0x6, 0x7240, 0x80, 0x7240, 0x40), 1), success)
-            mstore(0x72c0, 0x160c61828334077037bdf55ce2b065a5b9ab5acfafc6c0b1807de552559fbc51)
-            mstore(0x72e0, 0x27c3a1dd7b63790b0d6d72e10cd6f65eb4efd7aa1580f230912b686c93ef3a6b)
+            mstore(0x72c0, 0x093744ca5f6d125b2d2263b6e0597a8307ce7f6b124b85f57f7c9e4b86320f45)
+            mstore(0x72e0, 0x1b488e0a871eb01eaed718ae986beb4fae7a3088f8323897be7a7cae8f8acc3e)
             mstore(0x7300, mload(0x53a0))
             success := and(eq(staticcall(gas(), 0x7, 0x72c0, 0x60, 0x72c0, 0x40), 1), success)
             mstore(0x7320, mload(0x7240))
@@ -1411,8 +1367,8 @@ contract Verifier {
             mstore(0x7360, mload(0x72c0))
             mstore(0x7380, mload(0x72e0))
             success := and(eq(staticcall(gas(), 0x6, 0x7320, 0x80, 0x7320, 0x40), 1), success)
-            mstore(0x73a0, 0x03f1976f6dc2078e4f4217f24a246ab7fece2e09dba630130b7061f2116aac25)
-            mstore(0x73c0, 0x02607d815dd675f216581b33fe3c0f768dd1063a1469dbaeb2fbbde69649e023)
+            mstore(0x73a0, 0x1dff96f9cdc88e51a7910cff2dcf37760bc64be1ce6d16480b81740dd9e4300c)
+            mstore(0x73c0, 0x1a0bc4421bcd43bc82559e4765e0c91c2dcfd9ec3b5a84199890e5b586b27042)
             mstore(0x73e0, mload(0x53c0))
             success := and(eq(staticcall(gas(), 0x7, 0x73a0, 0x60, 0x73a0, 0x40), 1), success)
             mstore(0x7400, mload(0x7320))
@@ -1420,8 +1376,8 @@ contract Verifier {
             mstore(0x7440, mload(0x73a0))
             mstore(0x7460, mload(0x73c0))
             success := and(eq(staticcall(gas(), 0x6, 0x7400, 0x80, 0x7400, 0x40), 1), success)
-            mstore(0x7480, 0x22d530e32f52f97a43c06a09e269a39139bc417e4f73c717a95698d2d507031d)
-            mstore(0x74a0, 0x10a979fb8680a1445b522abd72f88c9e7b273c279457ce4f7a37cf484aed2959)
+            mstore(0x7480, 0x2120e4c047a7ad4eef123cdc15c8a553ef8b2a5209e8a9309c59210d71780527)
+            mstore(0x74a0, 0x1ead68ff0a6c0f635cf3df86cee57bea8375eed181e71d28c93f7b51e7d3ae96)
             mstore(0x74c0, mload(0x53e0))
             success := and(eq(staticcall(gas(), 0x7, 0x7480, 0x60, 0x7480, 0x40), 1), success)
             mstore(0x74e0, mload(0x7400))
@@ -1429,8 +1385,8 @@ contract Verifier {
             mstore(0x7520, mload(0x7480))
             mstore(0x7540, mload(0x74a0))
             success := and(eq(staticcall(gas(), 0x6, 0x74e0, 0x80, 0x74e0, 0x40), 1), success)
-            mstore(0x7560, 0x1c5a0481036e2ecb2bf34ed2939a5ec766929c2c9f3e87c10c57d463a20b4761)
-            mstore(0x7580, 0x252db73521a19684172c3d132d4401e94eb6e9a3f4f557007d58ccd224a46c55)
+            mstore(0x7560, 0x213b4fa47675a748ff528ca561032197bf5ca2952f61eaec8fd17925335af42f)
+            mstore(0x7580, 0x1c764ea60db1ba1bfce4eb1d66ec944950f5b4e1ed8008ff8a05209664c71c32)
             mstore(0x75a0, mload(0x5400))
             success := and(eq(staticcall(gas(), 0x7, 0x7560, 0x60, 0x7560, 0x40), 1), success)
             mstore(0x75c0, mload(0x74e0))
@@ -1438,8 +1394,8 @@ contract Verifier {
             mstore(0x7600, mload(0x7560))
             mstore(0x7620, mload(0x7580))
             success := and(eq(staticcall(gas(), 0x6, 0x75c0, 0x80, 0x75c0, 0x40), 1), success)
-            mstore(0x7640, 0x096a35e22005a5f5242f77a4e2687124900736f29e241b241fee846db659894a)
-            mstore(0x7660, 0x2b68e279012b3658aeb6b6f27308a651e915bb2a9d6776a47e5e343e0add0404)
+            mstore(0x7640, 0x097f0cdd0a1df0d938d1454fd51a8561a24c8a02b714dfec0bd580a94f9af0c1)
+            mstore(0x7660, 0x16cf0447831d6aedfc20a4ba4e584788109f5f11d37e846534e8355050153a5c)
             mstore(0x7680, mload(0x5420))
             success := and(eq(staticcall(gas(), 0x7, 0x7640, 0x60, 0x7640, 0x40), 1), success)
             mstore(0x76a0, mload(0x75c0))
@@ -1447,8 +1403,8 @@ contract Verifier {
             mstore(0x76e0, mload(0x7640))
             mstore(0x7700, mload(0x7660))
             success := and(eq(staticcall(gas(), 0x6, 0x76a0, 0x80, 0x76a0, 0x40), 1), success)
-            mstore(0x7720, 0x2803aa6d22edbdf26e06c0fb8ba0a803ee3d58c3be0f883fe9d0f0ea4cae56bd)
-            mstore(0x7740, 0x3030e3e09c25262821ee4620ca8eb118898947770f346a4bd94b9a7fc868e2b6)
+            mstore(0x7720, 0x037ae876eae738f288ca7f3cee712358431a35fbe902756612c460d35bfd599f)
+            mstore(0x7740, 0x1965bb3aaeae9a0a585f446ed40058c5297a3a9faa2e0291dff79bb866deb92c)
             mstore(0x7760, mload(0x5440))
             success := and(eq(staticcall(gas(), 0x7, 0x7720, 0x60, 0x7720, 0x40), 1), success)
             mstore(0x7780, mload(0x76a0))
@@ -1456,8 +1412,8 @@ contract Verifier {
             mstore(0x77c0, mload(0x7720))
             mstore(0x77e0, mload(0x7740))
             success := and(eq(staticcall(gas(), 0x6, 0x7780, 0x80, 0x7780, 0x40), 1), success)
-            mstore(0x7800, 0x1af8ae303bfb33fc2384f9f1bb84d21e98711698d4dd3fa79beb80d1bbc3c3c7)
-            mstore(0x7820, 0x0140d776aebd6dc1b0dc5fad400048e1f5cea36d77de21df8e4bde545a600e14)
+            mstore(0x7800, 0x21e7019892c06111e9eddc62ccd50c02a54720c44a6e3db2592c7a159bad2538)
+            mstore(0x7820, 0x20b66d6caae2a83c5af7a956befbcc69571a0fc3a92e9a7b4b8cd3e8e6de68f9)
             mstore(0x7840, mload(0x5460))
             success := and(eq(staticcall(gas(), 0x7, 0x7800, 0x60, 0x7800, 0x40), 1), success)
             mstore(0x7860, mload(0x7780))
@@ -1465,8 +1421,8 @@ contract Verifier {
             mstore(0x78a0, mload(0x7800))
             mstore(0x78c0, mload(0x7820))
             success := and(eq(staticcall(gas(), 0x6, 0x7860, 0x80, 0x7860, 0x40), 1), success)
-            mstore(0x78e0, 0x256e4cc49b1d335ca8d08d1c5e2fb2263e71678a50c5f92df3a16427cfa67770)
-            mstore(0x7900, 0x28ae267d1fc6d2e7150531969302b11af70d48b6ffc59372be406cdccd8ad16a)
+            mstore(0x78e0, 0x239a054ddabeff049c0e0f09ea20613d2355c3b13520a8bf37f398de2e38c198)
+            mstore(0x7900, 0x004a4a99a361ddcf014b293719ce14bb768413c6a8ae3f9a532f0eea1c7ae3af)
             mstore(0x7920, mload(0x5480))
             success := and(eq(staticcall(gas(), 0x7, 0x78e0, 0x60, 0x78e0, 0x40), 1), success)
             mstore(0x7940, mload(0x7860))
@@ -1474,8 +1430,8 @@ contract Verifier {
             mstore(0x7980, mload(0x78e0))
             mstore(0x79a0, mload(0x7900))
             success := and(eq(staticcall(gas(), 0x6, 0x7940, 0x80, 0x7940, 0x40), 1), success)
-            mstore(0x79c0, 0x261d9ec4cffbc14efddec4292d10fe71448fa04a83b3ebf561f2e1e34462bd51)
-            mstore(0x79e0, 0x089b7aefa4f95a926a4a123f82615deb3697d37397361fee75d264a73dd36b0b)
+            mstore(0x79c0, 0x1c97997fcc8152d27ee10bc2ddfd3ea48927d46c7f1f98634e1e02f418b9d2e6)
+            mstore(0x79e0, 0x2b971aed58385052cc63ee5edb6c89317d45758967a777e2ffef9b09ae001bf9)
             mstore(0x7a00, mload(0x54a0))
             success := and(eq(staticcall(gas(), 0x7, 0x79c0, 0x60, 0x79c0, 0x40), 1), success)
             mstore(0x7a20, mload(0x7940))
@@ -1671,10 +1627,10 @@ contract Verifier {
             mstore(0x8cc0, 0x12c85ea5db8c6deb4aab71808dcb408fe3d1e7690c43d37b4ce6cc0166fa7daa)
             mstore(0x8ce0, mload(0x8ba0))
             mstore(0x8d00, mload(0x8bc0))
-            mstore(0x8d20, 0x0e12663ae4ce5d3585bbb1bbc6878d35274d9011ca4ea33b1c5573dd4ef6323e)
-            mstore(0x8d40, 0x21a212fa72a6f042e5dc1e11d6903568c8bad2d8288a8bd8b530077971d02054)
-            mstore(0x8d60, 0x22d1db51ed8fee9fd07ff549d66ad6e2bc1ba9e5af2b38e6bb6e2d7020cb1501)
-            mstore(0x8d80, 0x2f889258e762557b1894d99d143585d7278cdd4b41b7bb7c875271712a543286)
+            mstore(0x8d20, 0x2329005ea8a804a907581104aba98f99022a3bc306c630b8453458cc09b3bcd3)
+            mstore(0x8d40, 0x096352ecf99892ac71a8f3548ddb449a5e7d01fde61766f75fca6e2eb7dab56d)
+            mstore(0x8d60, 0x2d83b0fc82bb3289b1b9c71a58eb2f799efa0bea1e5fae8c8dd8cdcb636911ae)
+            mstore(0x8d80, 0x2b4dd57a49fc4f6150f9142a774fa3300d0e96c38a3fb58f5e0ab550107580a0)
             success := and(eq(staticcall(gas(), 0x8, 0x8c20, 0x180, 0x8c20, 0x20), 1), success)
             success := and(eq(mload(0x8c20), 1), success)
 

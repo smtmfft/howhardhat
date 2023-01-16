@@ -65,17 +65,17 @@ describe("Verifier", function () {
         });
     });
 
-    describe("Verify", function () {
+    describe("Verify mock data", function () {
         before("load calldata to global buffer", function () {
             var Buffer = require('buffer').Buffer;
-            const calldata_file = "./data/calldata.bin";
-            fs.open(calldata_file, 'r', function (status, fd) {
+            const mock_calldata_file = "./data/calldata.bin";
+            fs.open(mock_calldata_file, 'r', function (status, fd) {
                 if (status) {
                     console.log(status.message);
                     return;
                 }
 
-                var stats = fs.statSync(calldata_file);
+                var stats = fs.statSync(mock_calldata_file);
                 var fileSizeInBytes = stats.size;
 
                 var buffer = Buffer.alloc(fileSizeInBytes);
@@ -84,24 +84,24 @@ describe("Verifier", function () {
                     // console.log(buffer.toString("hex"));
                 }));
 
-                global.buffer = buffer;
+                global.mock_data_buffer = buffer;
             });
         })
 
         it("Should proof verify pass", async function () {
             const { verifier } = await loadFixture(deployVerificationFixture);
-            var buffer = Buffer.from(global.buffer);
+            var buffer = Buffer.from(global.mock_data_buffer);
 
             // console.log("test calldata:", buffer.toString("hex"));
-            expect(await verifier.verify(buffer)).to.be.ok;
+            expect(await verifier.verifyMockData(buffer)).to.be.ok;
         });
 
         it("Should proof verify revert", async function () {
             const { verifier } = await loadFixture(deployVerificationFixture);
-            var buffer = Buffer.from(global.buffer);
+            var buffer = Buffer.from(global.mock_data_buffer);
 
             buffer[0] = 1
-            await expect(verifier.verify(buffer)).to.be.reverted;
+            await expect(verifier.verifyMockData(buffer)).to.be.reverted;
         });
     });
 });
