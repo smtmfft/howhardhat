@@ -41,7 +41,7 @@ describe("TestnetVerifier", function () {
     describe("verify real data with max_txs=14, max_calldata=10500", async function() {
         before("load calldata to global buffer", function () {
             var Buffer = require('buffer').Buffer;
-            let testnet_proof_file = "./data/block-5_proof.json";
+            let testnet_proof_file = "./data/testnet_block-5_proof.json";
             var data = JSON.parse(fs.readFileSync(testnet_proof_file).toString());
 
             let bufLen = data.instances.length * 32 + data.proof.length;

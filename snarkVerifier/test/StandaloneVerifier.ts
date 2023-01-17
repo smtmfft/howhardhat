@@ -56,7 +56,7 @@ describe("StandaloneVerifier", async function() {
 
     function load_call_data() {
         var Buffer = require('buffer').Buffer;
-        let testnet_proof_file = "./data/block-5_proof.json";
+        let testnet_proof_file = "./data/standalone_proof.json";
         var data = JSON.parse(fs.readFileSync(testnet_proof_file).toString());
     
         let bufLen = data.instances.length * 32 + data.proof.length;
