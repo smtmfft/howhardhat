@@ -36,6 +36,8 @@ describe("TestnetVerifier", function () {
         });
     });
 
+    let g_testnet_data = Buffer.alloc(1);
+
     describe("verify real data with max_txs=14, max_calldata=10500", async function() {
         before("load calldata to global buffer", function () {
             var Buffer = require('buffer').Buffer;
@@ -65,20 +67,20 @@ describe("TestnetVerifier", function () {
             }
 
             // console.log(testnet_data);
-            global.testnet_data = testnet_data;
+            g_testnet_data = testnet_data;
 
         })
 
         it("should verify ok", async function() {
             const { verifier } = await loadFixture(deployTestnetVerifierFixture);
-            var buffer = Buffer.from(global.testnet_data);
+            var buffer = Buffer.from(g_testnet_data);
             // console.log("test calldata:", buffer.toString("hex"));
             expect(await verifier.verifyTestNetData(buffer)).to.be.ok;
         });
 
         it("should verify fail", async function() {
             const { verifier } = await loadFixture(deployTestnetVerifierFixture);
-            var buffer = Buffer.from(global.testnet_data);
+            var buffer = Buffer.from(g_testnet_data);
             buffer[0] = 1;
             await expect(verifier.verifyTestNetData(buffer)).to.be.reverted;
         });

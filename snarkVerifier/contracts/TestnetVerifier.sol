@@ -26,7 +26,7 @@ contract TestnetVerifier {
     // verify real test proof.
     // PI<MAX_TXS=14, MAX_CALLDATA=10500>
     // code comes from data/PlonkVerifierEvm.yul, 
-    function verifyTestNetData(bytes calldata proof) public view returns (uint) {
+    function verifyTestNetData(bytes calldata /*proof*/) public view returns (uint) {
         // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
         // console.log("verify the proof ", proof.length);
         assembly {

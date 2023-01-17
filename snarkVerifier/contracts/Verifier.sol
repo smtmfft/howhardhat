@@ -2,7 +2,7 @@
 pragma solidity ^0.8.7;
 
 // Uncomment this line to use console.log
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract Verifier {
     uint public max_txs;
@@ -16,7 +16,7 @@ contract Verifier {
             _max_txs > 0,
             "max_txs > 0"
         );
-        console.log("constructing the verifier");
+        // console.log("constructing the verifier");
 
         max_txs = _max_txs;
         max_calldata = _max_calldata;
@@ -24,7 +24,7 @@ contract Verifier {
     }
 
     // point verifier for test purpose
-    function verifyPoint(bytes calldata proof) public returns (uint) {
+    function verifyPoint(bytes calldata) public pure returns (uint) {
         // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
         assembly {
             let success := true
@@ -70,7 +70,7 @@ contract Verifier {
 
     // verify mock proof.
     // code comes from data/PlonkVerifierEvm.yul, 
-    function verifyMockData(bytes calldata proof) public view returns (uint) {
+    function verifyMockData(bytes calldata /*proof*/) public view returns (uint) {
         // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
         // console.log("verify the proof ", proof.length);
         assembly {

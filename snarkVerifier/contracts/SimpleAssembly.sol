@@ -23,7 +23,7 @@ contract SimpleAssembly {
         }
     }
 
-    function simpleAssemblyRevertWithReturn() public view returns (uint){
+    function simpleAssemblyRevertWithReturn() public pure returns (uint){
         assembly {
             revert(0, 0)
         }
