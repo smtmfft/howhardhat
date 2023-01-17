@@ -65,6 +65,8 @@ describe("MockDataVerifier", function () {
         });
     });
 
+    let g_mock_data_buffer = Buffer.alloc(0);
+
     describe("Verify mock data", function () {
         before("load calldata to global buffer", function () {
             var Buffer = require('buffer').Buffer;
@@ -84,13 +86,13 @@ describe("MockDataVerifier", function () {
                     // console.log(buffer.toString("hex"));
                 }));
 
-                global.mock_data_buffer = buffer;
+                g_mock_data_buffer = buffer;
             });
         })
 
         it("Should proof verify pass", async function () {
             const { verifier } = await loadFixture(deployVerificationFixture);
-            var buffer = Buffer.from(global.mock_data_buffer);
+            var buffer = Buffer.from(g_mock_data_buffer);
 
             // console.log("test calldata:", buffer.toString("hex"));
             expect(await verifier.verifyMockData(buffer)).to.be.ok;
@@ -98,7 +100,7 @@ describe("MockDataVerifier", function () {
 
         it("Should proof verify revert", async function () {
             const { verifier } = await loadFixture(deployVerificationFixture);
-            var buffer = Buffer.from(global.mock_data_buffer);
+            var buffer = Buffer.from(g_mock_data_buffer);
 
             buffer[0] = 1
             await expect(verifier.verifyMockData(buffer)).to.be.reverted;
