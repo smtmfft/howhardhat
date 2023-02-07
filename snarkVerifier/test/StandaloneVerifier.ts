@@ -2,9 +2,10 @@ const hre = require("hardhat");
 const fs = require("fs");
 const { spawn, spawnSync } = require("node:child_process");
 import { expect } from "chai";
+import { BigNumber } from "ethers";
 
 describe("StandaloneVerifier", async function() {
-    async function compilePlonkVerifier(callback: any) {
+    async function compilePlonkVerifier(sourceFile: string, callback: any) {
         const SOLC_COMMAND = "./bin/solc";
     
         // download solc if not exist.
@@ -14,7 +15,7 @@ describe("StandaloneVerifier", async function() {
             console.log("download finished.");
         }
     
-        const sourceFile = "./contracts/yul/TestnetVerifier.yul";
+        // const sourceFile = "./contracts/yul/TestnetVerifier.yul";
         const compile = spawnSync(SOLC_COMMAND, ["--yul", "--bin", sourceFile]);
         let output = compile.stdout.toString();
     
@@ -36,11 +37,11 @@ describe("StandaloneVerifier", async function() {
         return {address: address}
     }
 
-    async function compileAndDeployPlonkVerifier() {
+    async function compileAndDeployPlonkVerifier(sourceFile: string) {
         const [signer] = await hre.ethers.getSigners();
         // console.log("signer addr:", signer.address);
 
-        let address = await compilePlonkVerifier(async function (bin: string) {
+        let address = await compilePlonkVerifier(sourceFile, async function (bin: string) {
                 // console.log("bin:", bin)
                 const tx = await signer.sendTransaction({
                     data: "0x" + bin,
@@ -85,13 +86,70 @@ describe("StandaloneVerifier", async function() {
         return testnet_data;
     }
 
+    let u256ToByteArray = function(/*long*/u256num: BigNumber) {
+        // we want to represent the input as a 32-bytes array
+        var byteArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        // console.log(u256num);    
+        for ( var index = 0; index < byteArray.length; index ++ ) {
+            var byte = u256num.and(0xff);
+            byteArray [ byteArray.length - 1 - index ] = byte.toNumber();
+            u256num = u256num.shr(8);
+        }
+        return byteArray;
+    };
+    
+
+    function load_zkchain_proof() {
+        var Buffer = require('buffer').Buffer;
+        let zkchain_proof_file = "./data/zkchain_proof.json";
+        var proof_data = JSON.parse(fs.readFileSync(zkchain_proof_file).toString());
+        var data = proof_data.result.circuit;
+        // console.log(data);
+        let bufLen = data.instance.length * 32 + data.proof.length;
+        var testnet_data = Buffer.alloc(bufLen);
+        var test_idx = 0;
+    
+        for (let i = 0; i < data.instance.length; i++) {
+            var uint256Bytes = Buffer.alloc(32);
+            let evenHexLen = data.instance[i].length - 2 + (data.instance[i].length % 2) 
+            let instanceBytes = Buffer.from(data.instance[i].slice(2).padStart(evenHexLen, '0'), 'hex');
+            for (let j = 0; j < instanceBytes.length; j++) {
+                uint256Bytes[31-j] = instanceBytes[instanceBytes.length-1-j]
+            }
+            for (let k = 0; k < 32; k++){
+                testnet_data[test_idx] = uint256Bytes[k];
+                test_idx++;
+            }
+        }
+
+        let evenHexLen = data.proof.length - 2 + (data.proof.length % 2) 
+        let proof_bytes = Buffer.from(data.proof.slice(2).padStart(evenHexLen, '0'), 'hex');
+        for(let i = 0; i < proof_bytes.length; i++) {
+            testnet_data[test_idx] = proof_bytes[i];
+            test_idx++;
+        }
+    
+        // console.log(testnet_data);
+        return testnet_data;
+        
+    }
+
     let verifierAddress = "";
     let calldata = Buffer.alloc(0);
 
+    let zkchain_verifier = "";
+    let zkchain_proof = Buffer.alloc(0);
+
     before("deploy yul binary contract", async function () {
-        const { address } = await compileAndDeployPlonkVerifier();
+        var { address } = await compileAndDeployPlonkVerifier("./contracts/yul/TestnetVerifier.yul");
         verifierAddress = address;
         calldata = load_call_data();
+
+        var {address} = await compileAndDeployPlonkVerifier("./contracts/yul/BigTestnetVerifier.yul");
+        zkchain_verifier = address;
+        zkchain_proof = load_zkchain_proof();
+
+        // console.log(verifierAddress)
     });
     
     it("standalone verify pass", async function() {
@@ -112,6 +170,15 @@ describe("StandaloneVerifier", async function() {
         let incorrect_calldata = Buffer.from(calldata);
         incorrect_calldata[0] = 1;
         expect(await testVerifier.verifyZKP(verifierAddress, incorrect_calldata)).to.be.false;
+    });
+
+    it("zkchain proof format verify pass", async function() {
+        const testVerifier = await (
+            await hre.ethers.getContractFactory("StandaloneVerifier")
+        ).deploy();
+    
+        // console.log("proof verify res:", res);
+        expect(await testVerifier.verifyZKP(zkchain_verifier, zkchain_proof)).to.be.true;
     });
 
 });
