@@ -3,10 +3,19 @@ const fs = require("fs");
 const { spawn, spawnSync } = require("node:child_process");
 import { expect } from "chai";
 import { BigNumber } from "ethers";
+import { exit } from "process";
+const os = require("os");
 
 describe("StandaloneVerifier", async function() {
     async function compilePlonkVerifier(sourceFile: string, callback: any) {
-        const SOLC_COMMAND = "./bin/solc";
+        let SOLC_COMMAND = "";
+        if (os.platform() == "darwin") {
+            SOLC_COMMAND = "./bin/solc.darwin";
+        } else if (os.platform() == "linux") {
+            SOLC_COMMAND = "./bin/solc.linux";
+        } else {
+            exit(-1);
+        }
     
         // download solc if not exist.
         if (!fs.existsSync(SOLC_COMMAND)) {
