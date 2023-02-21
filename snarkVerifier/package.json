@@ -24,9 +24,12 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^4.8.1",
     "crypto-js": "^4.1.1",
     "glob": "^8.0.3",
+    "openzeppelin-solidity": "^2.5.1",
     "solc": "^0.8.17",
+    "web3": "^1.8.2",
     "yulp": "^0.2.3"
   }
 }
