@@ -65,7 +65,6 @@ describe("Public Input Instance", function () {
                 baseFeePerGas: 0,
             };
     
-            console.log(testBlockHeader);
             const headerComputed = await testBlockHeader.rlpBlockHeader(
                 l2BlockHeader
             );
@@ -73,6 +72,5 @@ describe("Public Input Instance", function () {
     
             expect(headerComputed).to.equal(blockHash);
         });
-        });
-
+    });
 });
