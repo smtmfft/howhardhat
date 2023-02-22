@@ -10,9 +10,11 @@ import "./libs/LibBlockHeader.sol";
 
 contract TestLibBlockHeader {
     function hashBlockHeader(
-        BlockHeader calldata header
-    ) public pure returns (bytes32) {
-        return LibBlockHeader.hashBlockHeader(header);
+        BlockHeader calldata header,
+        address prover,
+        bytes32 txListHash
+    ) public pure returns (bytes16, bytes16) {
+        return LibBlockHeader.hashBlockHeader(header, prover, txListHash);
     }
 
     function rlpBlockHeader(

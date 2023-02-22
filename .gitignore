@@ -1,4 +1,5 @@
 node_modules
+yarn.lock
 artifacts
 cache
 typechain-types

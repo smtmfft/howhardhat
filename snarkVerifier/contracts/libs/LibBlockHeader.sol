@@ -18,7 +18,7 @@ struct BlockHeader {
     bytes32 receiptsRoot;
     bytes32[8] logsBloom;
     uint256 difficulty;
-    uint128 height;
+    uint64 height;
     uint64 gasLimit;
     uint64 gasUsed;
     uint64 timestamp;
@@ -33,15 +33,17 @@ library LibBlockHeader {
         0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347;
 
     function hashBlockHeader(
-        BlockHeader memory header
-    ) internal pure returns (bytes32) {
+        BlockHeader memory header,
+        address prover,
+        bytes32 txListHash
+    ) internal pure returns (bytes16, bytes16) {
         bytes[] memory list;
         if (header.baseFeePerGas == 0) {
             // non-EIP11559 transaction
-            list = new bytes[](15);
+            list = new bytes[](17);
         } else {
             // EIP1159 transaction
-            list = new bytes[](16);
+            list = new bytes[](18);
         }
         list[0] = LibRLPWriter.writeHash(header.parentHash);
         list[1] = LibRLPWriter.writeHash(header.ommersHash);
@@ -51,7 +53,7 @@ library LibBlockHeader {
         list[5] = LibRLPWriter.writeHash(header.receiptsRoot);
         list[6] = LibRLPWriter.writeBytes(abi.encodePacked(header.logsBloom));
         list[7] = LibRLPWriter.writeUint(header.difficulty);
-        list[8] = LibRLPWriter.writeUint(header.height);
+        list[8] = LibRLPWriter.writeUint64(header.height);
         list[9] = LibRLPWriter.writeUint64(header.gasLimit);
         list[10] = LibRLPWriter.writeUint64(header.gasUsed);
         list[11] = LibRLPWriter.writeUint64(header.timestamp);
@@ -63,10 +65,22 @@ library LibBlockHeader {
         if (header.baseFeePerGas != 0) {
             // non-EIP11559 transaction
             list[15] = LibRLPWriter.writeUint(header.baseFeePerGas);
+            list[16] = LibRLPWriter.writeAddress(prover);
+            list[17] = LibRLPWriter.writeHash(txListHash);
+        } else {
+            list[15] = LibRLPWriter.writeAddress(prover);
+            list[16] = LibRLPWriter.writeHash(txListHash);
         }
 
         bytes memory rlpHeader = LibRLPWriter.writeList(list);
-        return keccak256(rlpHeader);
+        return cutSha(keccak256(rlpHeader));
+    }
+
+    function cutSha(
+        bytes32 source
+    ) internal pure returns (bytes16 half1, bytes16 half2) {
+        half1 = bytes16(source);
+        half2 = bytes16(uint128(uint256(source)));
     }
 
     function isPartiallyValidForTaiko(
