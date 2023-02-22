@@ -1,0 +1,435 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/SimpleAssembly.sol": {
+      "lastModificationDate": 1676970788953,
+      "contentHash": "6b2273771cfc0b3ca62fc1db53d1f88d",
+      "sourceName": "contracts/SimpleAssembly.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "SimpleAssembly"
+      ]
+    },
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/StandaloneVerifier.sol": {
+      "lastModificationDate": 1676970788953,
+      "contentHash": "742d565b6f894a1f4cb7b789ff6a529b",
+      "sourceName": "contracts/StandaloneVerifier.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "StandaloneVerifier"
+      ]
+    },
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/TestLibBlockHeader.sol": {
+      "lastModificationDate": 1677057400690,
+      "contentHash": "115dc330df8d9247b048ea7372bf6c4c",
+      "sourceName": "contracts/TestLibBlockHeader.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./libs/LibBlockHeader.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "TestLibBlockHeader"
+      ]
+    },
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/libs/LibBlockHeader.sol": {
+      "lastModificationDate": 1677056971047,
+      "contentHash": "80162c24909807dac6dbfec04810cf5c",
+      "sourceName": "contracts/libs/LibBlockHeader.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../thirdparty/LibRLPWriter.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "LibBlockHeader"
+      ]
+    },
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/thirdparty/LibRLPWriter.sol": {
+      "lastModificationDate": 1676971488089,
+      "contentHash": "f5b7e491319f25c062ced33be27c26a5",
+      "sourceName": "contracts/thirdparty/LibRLPWriter.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "LibRLPWriter"
+      ]
+    },
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/thirdparty/LibMerkleTrie.sol": {
+      "lastModificationDate": 1676971488088,
+      "contentHash": "a9dd3a708a8186ec75388be93cac6ab5",
+      "sourceName": "contracts/thirdparty/LibMerkleTrie.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./LibBytesUtils.sol",
+        "./LibRLPReader.sol",
+        "./LibRLPWriter.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "LibMerkleTrie"
+      ]
+    },
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/thirdparty/LibBytesUtils.sol": {
+      "lastModificationDate": 1676971488088,
+      "contentHash": "bd639a70335c94d3f23992db6cea41be",
+      "sourceName": "contracts/thirdparty/LibBytesUtils.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "LibBytesUtils"
+      ]
+    },
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/thirdparty/LibRLPReader.sol": {
+      "lastModificationDate": 1676971488088,
+      "contentHash": "738fef2ae06c477bc6217d126c58b95e",
+      "sourceName": "contracts/thirdparty/LibRLPReader.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "LibRLPReader"
+      ]
+    },
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/thirdparty/LibSecureMerkleTrie.sol": {
+      "lastModificationDate": 1676971488089,
+      "contentHash": "ec9ff3949278519c3f82f9375df2432b",
+      "sourceName": "contracts/thirdparty/LibSecureMerkleTrie.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./LibMerkleTrie.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "LibSecureMerkleTrie"
+      ]
+    },
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/TestnetVerifier.sol": {
+      "lastModificationDate": 1676970788954,
+      "contentHash": "ac50f37b2c60edee384bc45c9a0d6aa5",
+      "sourceName": "contracts/TestnetVerifier.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "TestnetVerifier"
+      ]
+    },
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/Verifier.sol": {
+      "lastModificationDate": 1676970788954,
+      "contentHash": "1cc4616c44ff76232d559acefbbc3948",
+      "sourceName": "contracts/Verifier.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "Verifier"
+      ]
+    },
+    "/Users/xus/code/taiko/howhardhat/snarkVerifier/contracts/thirdparty/LibBlockHeaderDecoder.sol": {
+      "lastModificationDate": 1676971488088,
+      "contentHash": "84ab74f2594308e3ed7a6725373f44bf",
+      "sourceName": "contracts/thirdparty/LibBlockHeaderDecoder.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "LibBlockHeaderDecoder"
+      ]
+    }
+  }
+}
