@@ -1,6 +1,6 @@
 node_modules
-yarn.lock
+typechain-types
 artifacts
 cache
-typechain-types
+yarn.lock
 .*
