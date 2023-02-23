@@ -73,7 +73,7 @@ describe("Public Input Instance", function () {
 			const txListHash =
 				"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347";
 
-			console.log(testBlockHeader);
+			// console.log(testBlockHeader);
 			const [headerComputedHi, headerComputedLo] =
 				await testBlockHeader.hashBlockHeader(
 					l2BlockHeader,

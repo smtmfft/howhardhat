@@ -113,11 +113,13 @@ describe("StandaloneVerifier", async function() {
         let zkchain_proof_file = "./data/zkchain_proof.json";
         var proof_data = JSON.parse(fs.readFileSync(zkchain_proof_file).toString());
         var data = proof_data.result.circuit;
-        // console.log(data);
-        let bufLen = data.instance.length * 32 + data.proof.length;
+
+        let evenHexLen = data.proof.length - 2 + (data.proof.length % 2)
+        let proof_bytes = Buffer.from(data.proof.slice(2).padStart(evenHexLen, '0'), 'hex');
+        let bufLen = data.instance.length * 32 + proof_bytes.length;
         var testnet_data = Buffer.alloc(bufLen);
+
         var test_idx = 0;
-    
         for (let i = 0; i < data.instance.length; i++) {
             var uint256Bytes = Buffer.alloc(32);
             let evenHexLen = data.instance[i].length - 2 + (data.instance[i].length % 2) 
@@ -131,14 +133,12 @@ describe("StandaloneVerifier", async function() {
             }
         }
 
-        let evenHexLen = data.proof.length - 2 + (data.proof.length % 2) 
-        let proof_bytes = Buffer.from(data.proof.slice(2).padStart(evenHexLen, '0'), 'hex');
         for(let i = 0; i < proof_bytes.length; i++) {
             testnet_data[test_idx] = proof_bytes[i];
             test_idx++;
         }
     
-        // console.log(testnet_data);
+        // console.log(testnet_data.toString("hex"));
         return testnet_data;
         
     }
