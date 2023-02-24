@@ -8,7 +8,7 @@ const config: HardhatUserConfig = {
 	noImplicitAny: false,
 	networks: {
 		hardhat: {
-			// blockGasLimit: 0x1fffffffffffff,
+			//blockGasLimit: 0x1fffffffffffff,
 			allowUnlimitedContractSize: true,
 		},
 	},
