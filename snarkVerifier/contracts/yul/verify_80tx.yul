@@ -2139,8 +2139,9 @@ success := and(eq(staticcall(gas(), 0x8, 0xbea0, 0x180, 0xbea0, 0x20), 1), succe
 success := and(eq(mload(0xbea0), 1), success)
 
             if not(success) { revert(0, 0) }
-            return(0, 0)
-
+            // keccak256("taiko")
+            mstore(0x00, 0x93ac8fdbfc0b0608f9195474a0dd6242f019f5abc3c4e26ad51fefb059cc0177)
+            return(0, 32)
                 }
             }
         }

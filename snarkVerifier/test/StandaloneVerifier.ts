@@ -178,7 +178,7 @@ describe("StandaloneVerifier", async function() {
     
         let incorrect_calldata = Buffer.from(calldata);
         incorrect_calldata[0] = 1;
-        expect(await testVerifier.verifyZKP(verifierAddress, incorrect_calldata)).to.be.false;
+        await expect(testVerifier.verifyZKP(verifierAddress, incorrect_calldata)).to.be.reverted;
     });
 
     it("zkchain proof format verify pass", async function() {
