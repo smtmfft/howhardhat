@@ -106,23 +106,33 @@ describe("AggregationVerifier", async function() {
         }
         return byteArray;
     };
-    
+
+    // hex to bytes:
+    // 0x1234 -> 0x12 0x34
+    //   1234 -> 0x12 0x34
+    // 0x123 -> 0x01 0x23
+    //   123 -> 0x01 0x23
+    function hex_to_bytes(input: string) {
+      if (input.startsWith("0x") || input.startsWith("0X")) {
+          input = input.slice(2);
+      }
+      let evenHexLen = input.length - 2 + (input.length % 2)
+      return Buffer.from(input.padStart(evenHexLen, '0'), 'hex');
+    }
 
     function load_zkchain_proof(zkchain_proof_file: string) {
         var Buffer = require('buffer').Buffer;
         var proof_data = JSON.parse(fs.readFileSync(zkchain_proof_file).toString());
         var data = proof_data.result.circuit;
 
-        let evenHexLen = data.proof.length - 2 + (data.proof.length % 2)
-        let proof_bytes = Buffer.from(data.proof.slice(2).padStart(evenHexLen, '0'), 'hex');
+        let proof_bytes = hex_to_bytes(data.proof);
         let bufLen = data.instance.length * 32 + proof_bytes.length;
         var testnet_data = Buffer.alloc(bufLen);
 
         var test_idx = 0;
         for (let i = 0; i < data.instance.length; i++) {
             var uint256Bytes = Buffer.alloc(32);
-            let evenHexLen = data.instance[i].length - 2 + (data.instance[i].length % 2) 
-            let instanceBytes = Buffer.from(data.instance[i].slice(2).padStart(evenHexLen, '0'), 'hex');
+            let instanceBytes = hex_to_bytes(data.instance[i]);
             for (let j = 0; j < instanceBytes.length; j++) {
                 uint256Bytes[31-j] = instanceBytes[instanceBytes.length-1-j]
             }
