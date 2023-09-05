@@ -160,7 +160,7 @@ describe("AggregationVerifier", async function() {
         zkchain_verifier = address;
         zkchain_proof = load_zkchain_proof("./data/aggregation_1_to_1.json");
 
-        // console.log(verifierAddress)
+        console.log(zkchain_verifier)
     });
     
     it("zkchain proof format verify pass", async function() {
