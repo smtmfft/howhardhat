@@ -156,7 +156,7 @@ describe("AggregationVerifier", async function() {
     let zkchain_proof = Buffer.alloc(0);
 
     before("deploy yul binary contract", async function () {
-        var {address} = await compileAndDeployPlonkVerifier("./contracts/yul/aggregation_d21_1_to_1.yul");
+        var {address} = await compileAndDeployPlonkVerifier("./contracts/yul/aggregation_d22_1_to_1.yul");
         zkchain_verifier = address;
         zkchain_proof = load_zkchain_proof("./data/aggregation_1_to_1.json");
 
