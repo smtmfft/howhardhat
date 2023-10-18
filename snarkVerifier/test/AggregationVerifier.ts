@@ -116,7 +116,7 @@ describe("AggregationVerifier", async function() {
       if (input.startsWith("0x") || input.startsWith("0X")) {
           input = input.slice(2);
       }
-      let evenHexLen = input.length - 2 + (input.length % 2)
+      let evenHexLen = input.length + (input.length % 2)
       return Buffer.from(input.padStart(evenHexLen, '0'), 'hex');
     }
 
@@ -167,8 +167,7 @@ describe("AggregationVerifier", async function() {
         const testVerifier = await (
             await hre.ethers.getContractFactory("StandaloneVerifier")
         ).deploy();
-    
-        // console.log("proof verify res:", res);
+        // console.log("proof verify res:", zkchain_proof);
         expect(await testVerifier.verifyZKP(zkchain_verifier, zkchain_proof)).to.be.true;
     });
 
