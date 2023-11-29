@@ -23,14 +23,16 @@ describe("AggregationVerifier", async function() {
             spawnSync("tasks/download_solc.sh");
             console.log("download finished.");
         }
-    
+
         // const sourceFile = "./contracts/yul/TestnetVerifier.yul";
-        const compile = spawnSync(SOLC_COMMAND, ["--yul", "--bin", sourceFile]);
+        const compile = sourceFile.endsWith(".yul") ?
+            spawnSync(SOLC_COMMAND, ["--yul", "--bin", sourceFile]) :
+            spawnSync(SOLC_COMMAND, ["--bin", sourceFile]);
         let output = compile.stdout.toString();
-    
+
         let address = "";
         const lines = output.split("\n");
-        const tag = "Binary representation:";
+        const tag = sourceFile.endsWith(".yul") ? "Binary representation:": "Binary:";
 
         let next = false;
         for (const line of lines) {
@@ -59,7 +61,7 @@ describe("AggregationVerifier", async function() {
                 // console.log(tx)
                 const receipt = await tx.wait();
                 // console.log("receipt:", receipt)
-                return receipt.contractAddress;; 
+                return receipt.contractAddress;
         });
         return address;
     }
@@ -156,7 +158,7 @@ describe("AggregationVerifier", async function() {
     let zkchain_proof = Buffer.alloc(0);
 
     before("deploy yul binary contract", async function () {
-        var {address} = await compileAndDeployPlonkVerifier("./contracts/yul/aggregation_d22_1_to_1.yul");
+        var {address} = await compileAndDeployPlonkVerifier("./contracts/yul/aggregation_d22.sol");
         zkchain_verifier = address;
         zkchain_proof = load_zkchain_proof("./data/aggregation_1_to_1.json");
 
