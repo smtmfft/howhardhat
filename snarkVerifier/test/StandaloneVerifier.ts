@@ -24,7 +24,7 @@ describe("StandaloneVerifier", async function() {
             console.log("download finished.");
         }
     
-        // const sourceFile = "./contracts/yul/TestnetVerifier.yul";
+        // const sourceFile = "./contracts/verifier/TestnetVerifier.yul";
         const compile = spawnSync(SOLC_COMMAND, ["--yul", "--bin", sourceFile]);
         let output = compile.stdout.toString();
     
@@ -150,11 +150,11 @@ describe("StandaloneVerifier", async function() {
     let zkchain_proof = Buffer.alloc(0);
 
     before("deploy yul binary contract", async function () {
-        var { address } = await compileAndDeployPlonkVerifier("./contracts/yul/TestnetVerifier.yul");
+        var { address } = await compileAndDeployPlonkVerifier("./contracts/verifier/TestnetVerifier.yul");
         verifierAddress = address;
         calldata = load_call_data();
 
-        var {address} = await compileAndDeployPlonkVerifier("./contracts/yul/BigTestnetVerifier.yul");
+        var {address} = await compileAndDeployPlonkVerifier("./contracts/verifier/BigTestnetVerifier.yul");
         zkchain_verifier = address;
         zkchain_proof = load_zkchain_proof();
 
